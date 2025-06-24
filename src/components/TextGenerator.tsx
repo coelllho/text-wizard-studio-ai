@@ -8,6 +8,7 @@ import { Slider } from "@/components/ui/slider";
 import { Copy, RefreshCw, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface TextGeneratorProps {
   title: string;
@@ -53,39 +54,36 @@ const TextGenerator: React.FC<TextGeneratorProps> = ({
 
     setIsGenerating(true);
     
-    // Simular geração de texto com IA
-    setTimeout(() => {
+    try {
       const prompt = generatePrompt(topic, language, creativity[0]);
       
-      // Aqui seria onde você faria a chamada real para a API de IA
-      // Por enquanto, vamos simular uma resposta baseada no prompt
-      const simulatedResponse = generateSimulatedText(prompt, topic, language, creativity[0]);
-      
-      setGeneratedText(simulatedResponse);
-      setIsGenerating(false);
-    }, 2000);
-  };
+      const { data, error } = await supabase.functions.invoke('generate-text', {
+        body: { prompt }
+      });
 
-  const generateSimulatedText = (prompt: string, topic: string, lang: string, creativityLevel: number) => {
-    // Esta é uma simulação. Em um projeto real, você enviaria o prompt para uma API de IA
-    const isPortuguese = lang === 'pt-BR';
-    
-    if (title.includes('Podcast')) {
-      return isPortuguese 
-        ? `**Roteiro de Podcast: ${topic}**\n\n**Abertura:**\nOlá pessoal, bem-vindos a mais um episódio! Hoje vamos mergulhar no fascinante mundo de ${topic}.\n\n**Desenvolvimento:**\nVamos começar explorando os aspectos fundamentais de ${topic}...\n\n**Encerramento:**\nE por hoje é só! Não esqueçam de compartilhar este episódio com seus amigos. Até a próxima!`
-        : `**Podcast Script: ${topic}**\n\n**Opening:**\nHello everyone, welcome to another episode! Today we're diving into the fascinating world of ${topic}.\n\n**Development:**\nLet's start by exploring the fundamental aspects of ${topic}...\n\n**Closing:**\nThat's all for today! Don't forget to share this episode with your friends. See you next time!`;
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      if (data && data.generatedText) {
+        setGeneratedText(data.generatedText);
+        toast({
+          title: "Sucesso!",
+          description: "Texto gerado com sucesso.",
+        });
+      } else {
+        throw new Error('Nenhum texto foi gerado');
+      }
+    } catch (error) {
+      console.error('Erro ao gerar texto:', error);
+      toast({
+        title: "Erro",
+        description: "Erro ao gerar o texto. Tente novamente em alguns segundos.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGenerating(false);
     }
-    
-    if (title.includes('Instagram')) {
-      return isPortuguese
-        ? `🌟 Descobrindo o poder de ${topic}! ✨\n\nHoje quero compartilhar com vocês algumas reflexões sobre ${topic} que podem transformar nossa perspectiva...\n\n💡 Dica importante: sempre mantenha a mente aberta para novas possibilidades!\n\n#${topic.replace(/\s+/g, '')} #inspiracao #motivacao #crescimento #dicadodia #reflexao`
-        : `🌟 Discovering the power of ${topic}! ✨\n\nToday I want to share with you some thoughts about ${topic} that can transform our perspective...\n\n💡 Important tip: always keep an open mind for new possibilities!\n\n#${topic.replace(/\s+/g, '')} #inspiration #motivation #growth #tipoftheday #reflection`;
-    }
-    
-    // Blog post
-    return isPortuguese
-      ? `# ${topic}: Um Guia Completo\n\n## Introdução\n\nNeste artigo, vamos explorar em detalhes o tema ${topic}, abordando seus principais aspectos e como ele pode impactar nosso dia a dia.\n\n## Desenvolvimento\n\nO ${topic} tem se tornado cada vez mais relevante nos últimos anos...\n\n## Conclusão\n\nComo vimos, ${topic} é um assunto complexo que merece nossa atenção e estudo contínuo.`
-      : `# ${topic}: A Complete Guide\n\n## Introduction\n\nIn this article, we will explore in detail the topic of ${topic}, addressing its main aspects and how it can impact our daily lives.\n\n## Development\n\n${topic} has become increasingly relevant in recent years...\n\n## Conclusion\n\nAs we have seen, ${topic} is a complex subject that deserves our attention and continuous study.`;
   };
 
   const copyToClipboard = () => {
