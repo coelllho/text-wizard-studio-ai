@@ -27,7 +27,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'gpt-4.1-mini',
         messages: [
           { role: 'system', content: 'Você é um assistente especializado em criação de conteúdo. Gere textos de alta qualidade baseados no prompt do usuário.' },
           { role: 'user', content: prompt }
