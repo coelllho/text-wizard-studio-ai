@@ -18,6 +18,8 @@ serve(async (req) => {
   try {
     const { prompt } = await req.json();
 
+    console.log('Generating text with prompt:', prompt);
+
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -36,11 +38,14 @@ serve(async (req) => {
     });
 
     if (!response.ok) {
+      console.error('OpenAI API error:', response.status, response.statusText);
       throw new Error(`OpenAI API error: ${response.status}`);
     }
 
     const data = await response.json();
     const generatedText = data.choices[0].message.content;
+
+    console.log('Text generated successfully');
 
     return new Response(JSON.stringify({ generatedText }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
