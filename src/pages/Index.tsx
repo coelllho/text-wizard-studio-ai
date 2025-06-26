@@ -1,7 +1,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileText, Instagram, Mic, Users, Lightbulb, Radio, User, Hash, MessageSquare, UserCheck, Mail, Sparkles, ArrowRight, Zap } from "lucide-react";
+import { FileText, Instagram, Mic, Users, Lightbulb, Radio, User, Hash, MessageSquare, UserCheck, Mail, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -107,9 +107,9 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      {/* Modern Header */}
+      {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="relative">
@@ -119,76 +119,19 @@ const Index = () => {
                 <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse"></div>
               </div>
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-                  AITextGen
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+                  Geração de textos com IA
                 </h1>
-                <p className="text-xs text-muted-foreground">Powered by AI</p>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="hidden sm:flex items-center space-x-2 px-4 py-2 rounded-full bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20">
-                <Sparkles className="h-4 w-4 text-green-500" />
-                <span className="text-sm font-medium text-green-600 dark:text-green-400">
-                  100% Grátis
-                </span>
-              </div>
-              <ThemeToggle />
-            </div>
+            <ThemeToggle />
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden py-24 sm:py-32">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5"></div>
-        <div className="container mx-auto px-4 text-center relative">
-          <div className="max-w-4xl mx-auto">
-            {/* Badge */}
-            <div className="inline-flex items-center space-x-2 bg-primary/10 border border-primary/20 rounded-full px-4 py-2 mb-8">
-              <Zap className="h-4 w-4 text-primary" />
-              <span className="text-sm font-medium text-primary">Inteligência Artificial Avançada</span>
-            </div>
-
-            {/* Main Heading */}
-            <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
-              <span className="bg-gradient-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent">
-                Geração de Textos
-              </span>
-              <br />
-              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                com IA
-              </span>
-            </h2>
-
-            {/* Subtitle */}
-            <p className="text-xl sm:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed">
-              Transforme suas ideias em textos profissionais e envolventes com nossos agentes especializados em criação de conteúdo.
-            </p>
-
-            {/* CTA Button */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-              <Button size="lg" className="group bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground px-8 py-4 rounded-xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300">
-                Começar Agora
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-              <Button variant="outline" size="lg" className="px-8 py-4 rounded-xl border-border/50 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300">
-                Ver Exemplos
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Tools Grid */}
-      <section className="py-16 relative">
+      <section className="py-12">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h3 className="text-3xl font-bold mb-4">Escolha sua Ferramenta</h3>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Cada agente é especializado em um tipo específico de conteúdo para garantir os melhores resultados.
-            </p>
-          </div>
-
           <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
             {tools.map((tool) => {
               const IconComponent = tool.icon;
@@ -225,43 +168,6 @@ const Index = () => {
           </div>
         </div>
       </section>
-
-      {/* Stats Section */}
-      <section className="py-16 bg-gradient-to-r from-primary/5 via-transparent to-accent/5">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto text-center">
-            <div className="space-y-2">
-              <div className="text-4xl font-bold text-primary">12+</div>
-              <div className="text-muted-foreground">Ferramentas Especializadas</div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-4xl font-bold text-primary">100%</div>
-              <div className="text-muted-foreground">Gratuito</div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-4xl font-bold text-primary">∞</div>
-              <div className="text-muted-foreground">Possibilidades</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="border-t border-border/40 bg-muted/30 py-12">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between">
-            <div className="flex items-center space-x-3 mb-4 md:mb-0">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
-                <FileText className="h-4 w-4 text-primary-foreground" />
-              </div>
-              <span className="font-semibold text-foreground">AITextGen</span>
-            </div>
-            <p className="text-muted-foreground text-center">
-              © 2024 AITextGen. Ferramenta gratuita para criação de conteúdo com IA.
-            </p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };
