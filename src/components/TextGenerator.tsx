@@ -38,16 +38,28 @@ const TextGenerator = ({ title, description, placeholder, gradient, icon, genera
     try {
       const prompt = generatePrompt(topic, language, creativity[0]);
       
+      console.log('Sending prompt to function:', prompt);
+      
       const { data, error } = await supabase.functions.invoke('generate-text', {
         body: { prompt }
       });
 
+      console.log('Function response:', { data, error });
+
       if (error) {
         console.error('Supabase function error:', error);
-        throw error;
+        throw new Error(error.message || 'Erro na função do Supabase');
       }
 
-      if (!data?.text) {
+      if (!data) {
+        throw new Error('Nenhuma resposta recebida da função');
+      }
+
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      if (!data.text) {
         throw new Error('Nenhum texto foi gerado');
       }
 
@@ -56,7 +68,8 @@ const TextGenerator = ({ title, description, placeholder, gradient, icon, genera
       
     } catch (error) {
       console.error('Error generating text:', error);
-      toast.error("Erro ao gerar texto. Tente novamente.");
+      const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+      toast.error(`Erro ao gerar texto: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }

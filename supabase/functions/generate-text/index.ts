@@ -18,6 +18,10 @@ serve(async (req) => {
   try {
     const { prompt } = await req.json();
 
+    if (!prompt) {
+      throw new Error('Prompt is required');
+    }
+
     console.log('Generating text with prompt:', prompt);
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -27,7 +31,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4.1-mini',
+        model: 'gpt-4o-mini',
         messages: [
           { role: 'system', content: 'Você é um assistente especializado em criação de conteúdo. Gere textos de alta qualidade baseados no prompt do usuário.' },
           { role: 'user', content: prompt }
@@ -38,21 +42,29 @@ serve(async (req) => {
     });
 
     if (!response.ok) {
-      console.error('OpenAI API error:', response.status, response.statusText);
-      throw new Error(`OpenAI API error: ${response.status}`);
+      const errorText = await response.text();
+      console.error('OpenAI API error:', response.status, response.statusText, errorText);
+      throw new Error(`OpenAI API error: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();
+    
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+      throw new Error('Invalid response format from OpenAI');
+    }
+
     const generatedText = data.choices[0].message.content;
 
     console.log('Text generated successfully');
 
-    return new Response(JSON.stringify({ generatedText }), {
+    return new Response(JSON.stringify({ text: generatedText }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error('Error in generate-text function:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ 
+      error: error.message || 'An error occurred while generating text' 
+    }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
