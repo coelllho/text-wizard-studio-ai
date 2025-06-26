@@ -193,15 +193,15 @@ const Index = () => {
             {tools.map((tool) => {
               const IconComponent = tool.icon;
               return (
-                <Card key={tool.id} className="group relative overflow-hidden border-0 bg-card/50 backdrop-blur-sm hover:bg-card/80 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary/10">
+                <Card key={tool.id} className="group relative overflow-hidden border-0 bg-card/50 backdrop-blur-sm hover:bg-card/80 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary/10 h-[320px] flex flex-col">
                   <div className="absolute inset-0 bg-gradient-to-br from-transparent via-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   
-                  <CardContent className="p-0 relative">
-                    <div className={`bg-gradient-to-br ${tool.gradient} p-8 text-white relative overflow-hidden`}>
+                  <CardContent className="p-0 relative flex flex-col h-full">
+                    <div className={`bg-gradient-to-br ${tool.gradient} p-6 text-white relative overflow-hidden flex-1 flex flex-col justify-center min-h-[180px]`}>
                       <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
                       <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-12 -translate-x-12"></div>
                       
-                      <div className="relative z-10">
+                      <div className="relative z-10 flex flex-col justify-center h-full">
                         <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                           <IconComponent className="h-7 w-7" />
                         </div>
@@ -210,7 +210,7 @@ const Index = () => {
                       </div>
                     </div>
                     
-                    <div className="p-6">
+                    <div className="p-6 mt-auto">
                       <Link to={tool.path}>
                         <Button className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300 group-hover:scale-105">
                           Usar Ferramenta
