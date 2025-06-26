@@ -1,7 +1,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileText, Instagram, Mic } from "lucide-react";
+import { FileText, Instagram, Mic, Users, Lightbulb, Radio, User, Hash, MessageSquare, UserCheck, Mail, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Index = () => {
@@ -29,6 +29,78 @@ const Index = () => {
       icon: FileText,
       gradient: "from-green-500 to-emerald-500",
       path: "/blog-generator"
+    },
+    {
+      id: "social-post",
+      title: "Gerador de Posts Sociais",
+      description: "Gere postagens envolventes para redes sociais com otimizações para cliques",
+      icon: MessageSquare,
+      gradient: "from-orange-500 to-red-500",
+      path: "/social-post-generator"
+    },
+    {
+      id: "bullet-points",
+      title: "Gerador de Bullet Points",
+      description: "Transforme textos em bullet points organizados para currículos e marketing",
+      icon: Hash,
+      gradient: "from-indigo-500 to-purple-500",
+      path: "/bullet-points-generator"
+    },
+    {
+      id: "discussion-post",
+      title: "Gerador de Posts de Discussão",
+      description: "Crie posts interativos personalizados para estimular conversas online",
+      icon: Users,
+      gradient: "from-teal-500 to-green-500",
+      path: "/discussion-post-generator"
+    },
+    {
+      id: "resignation-letter",
+      title: "Gerador de Carta de Demissão",
+      description: "Redija cartas de demissão profissionais e personalizadas em minutos",
+      icon: Mail,
+      gradient: "from-gray-500 to-slate-600",
+      path: "/resignation-letter-generator"
+    },
+    {
+      id: "content-ideas",
+      title: "Gerador de Ideias de Conteúdo",
+      description: "Gere facilmente ideias de criação de conteúdo para blogs, vídeos e redes sociais",
+      icon: Lightbulb,
+      gradient: "from-yellow-500 to-orange-500",
+      path: "/content-ideas-generator"
+    },
+    {
+      id: "radio-ad",
+      title: "Gerador de Script para Anúncio de Rádio",
+      description: "Crie scripts convincentes e concisos para anúncios de rádio eficazes",
+      icon: Radio,
+      gradient: "from-pink-500 to-rose-500",
+      path: "/radio-ad-generator"
+    },
+    {
+      id: "resume-objective",
+      title: "Gerador de Objetivo de Currículo",
+      description: "Crie objetivos de currículo personalizados e impactantes para se destacar",
+      icon: User,
+      gradient: "from-blue-600 to-indigo-600",
+      path: "/resume-objective-generator"
+    },
+    {
+      id: "resume-headline",
+      title: "Gerador de Título de Currículo",
+      description: "Crie títulos profissionais personalizados para causar forte primeira impressão",
+      icon: UserCheck,
+      gradient: "from-emerald-600 to-teal-600",
+      path: "/resume-headline-generator"
+    },
+    {
+      id: "twitter-hashtag",
+      title: "Gerador de Hashtags para Twitter",
+      description: "Crie hashtags eficazes para aumentar visibilidade e engajamento no Twitter",
+      icon: Hash,
+      gradient: "from-sky-500 to-blue-500",
+      path: "/twitter-hashtag-generator"
     }
   ];
 
@@ -81,20 +153,20 @@ const Index = () => {
           </div>
 
           {/* Tools Grid */}
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
             {tools.map((tool) => {
               const IconComponent = tool.icon;
               return (
                 <Card key={tool.id} className="group hover:shadow-2xl transition-all duration-300 border-0 overflow-hidden">
                   <CardContent className="p-0">
-                    <div className={`bg-gradient-to-br ${tool.gradient} p-8 text-white`}>
-                      <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                        <IconComponent className="h-8 w-8" />
+                    <div className={`bg-gradient-to-br ${tool.gradient} p-6 text-white`}>
+                      <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                        <IconComponent className="h-6 w-6" />
                       </div>
-                      <h3 className="text-xl font-bold mb-2">{tool.title}</h3>
+                      <h3 className="text-lg font-bold mb-2">{tool.title}</h3>
                       <p className="text-white/90 text-sm">{tool.description}</p>
                     </div>
-                    <div className="p-6">
+                    <div className="p-4">
                       <Link to={tool.path}>
                         <Button className="w-full bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black">
                           Começar Agora
