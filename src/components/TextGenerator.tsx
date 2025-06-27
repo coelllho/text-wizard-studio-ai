@@ -5,9 +5,8 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { Loader2, Copy, ArrowLeft, Sparkles, Wand2 } from "lucide-react";
+import { Loader2, Copy, ArrowLeft, Sparkles, Wand2, Settings } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -33,37 +32,57 @@ const TextGenerator = ({ title, description, placeholder, gradient, icon, genera
       return;
     }
 
+    const apiKey = localStorage.getItem('openai_api_key');
+    if (!apiKey) {
+      toast.error("Por favor, configure sua API Key da OpenAI nas configurações.");
+      return;
+    }
+
     setIsLoading(true);
     
     try {
       const prompt = generatePrompt(topic, language, creativity[0]);
       
-      console.log('Sending prompt to function:', prompt);
+      console.log('Generating text with user API key');
       
-      const { data, error } = await supabase.functions.invoke('generate-text', {
-        body: { prompt }
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: [
+            { role: 'system', content: 'Você é um assistente especializado em criação de conteúdo. Gere textos de alta qualidade baseados no prompt do usuário.' },
+            { role: 'user', content: prompt }
+          ],
+          temperature: creativity[0] / 10,
+          max_tokens: 2000,
+        }),
       });
 
-      console.log('Function response:', { data, error });
-
-      if (error) {
-        console.error('Supabase function error:', error);
-        throw new Error(error.message || 'Erro na função do Supabase');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('OpenAI API error:', response.status, response.statusText, errorData);
+        
+        if (response.status === 401) {
+          throw new Error('API Key inválida. Verifique sua chave nas configurações.');
+        } else if (response.status === 429) {
+          throw new Error('Limite de uso excedido. Verifique seu plano da OpenAI.');
+        } else {
+          throw new Error(`Erro da API: ${response.status} - ${errorData.error?.message || 'Erro desconhecido'}`);
+        }
       }
 
-      if (!data) {
-        throw new Error('Nenhuma resposta recebida da função');
+      const data = await response.json();
+      
+      if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+        throw new Error('Resposta inválida da API OpenAI');
       }
 
-      if (data.error) {
-        throw new Error(data.error);
-      }
-
-      if (!data.text) {
-        throw new Error('Nenhum texto foi gerado');
-      }
-
-      setGeneratedText(data.text);
+      const generatedText = data.choices[0].message.content;
+      setGeneratedText(generatedText);
       toast.success("Texto gerado com sucesso!");
       
     } catch (error) {
@@ -83,6 +102,8 @@ const TextGenerator = ({ title, description, placeholder, gradient, icon, genera
       toast.error("Erro ao copiar texto.");
     }
   };
+
+  const apiKey = localStorage.getItem('openai_api_key');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
@@ -106,7 +127,17 @@ const TextGenerator = ({ title, description, placeholder, gradient, icon, genera
                 </div>
               </div>
             </div>
-            <ThemeToggle />
+            <div className="flex items-center space-x-2">
+              {!apiKey && (
+                <Link to="/settings">
+                  <Button variant="outline" size="sm" className="text-amber-600 border-amber-200 hover:bg-amber-50">
+                    <Settings className="h-4 w-4 mr-2" />
+                    Configurar API Key
+                  </Button>
+                </Link>
+              )}
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </header>
@@ -125,6 +156,23 @@ const TextGenerator = ({ title, description, placeholder, gradient, icon, genera
                   <p className="text-muted-foreground">{description}</p>
                 </div>
               </div>
+              
+              {!apiKey && (
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                  <div className="flex items-center space-x-2 text-amber-800">
+                    <Settings className="h-4 w-4" />
+                    <span className="text-sm font-medium">API Key necessária</span>
+                  </div>
+                  <p className="text-xs text-amber-700 mt-1">
+                    Configure sua API Key da OpenAI nas configurações para usar esta ferramenta.
+                  </p>
+                  <Link to="/settings" className="mt-2 inline-block">
+                    <Button size="sm" variant="outline" className="text-amber-700 border-amber-300 hover:bg-amber-100">
+                      Configurar agora
+                    </Button>
+                  </Link>
+                </div>
+              )}
             </CardHeader>
 
             <CardContent className="space-y-6">
@@ -185,7 +233,7 @@ const TextGenerator = ({ title, description, placeholder, gradient, icon, genera
               {/* Generate Button */}
               <Button
                 onClick={handleGenerate}
-                disabled={isLoading || !topic.trim()}
+                disabled={isLoading || !topic.trim() || !apiKey}
                 className={`w-full bg-gradient-to-r ${gradient} hover:opacity-90 text-white font-medium py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50`}
                 size="lg"
               >
@@ -237,7 +285,7 @@ const TextGenerator = ({ title, description, placeholder, gradient, icon, genera
                   </div>
                   <p className="text-muted-foreground mb-2">Seu texto aparecerá aqui</p>
                   <p className="text-sm text-muted-foreground">
-                    Preencha os campos acima e clique em "Gerar Texto"
+                    {!apiKey ? 'Configure sua API Key nas configurações' : 'Preencha os campos acima e clique em "Gerar Texto"'}
                   </p>
                 </div>
               )}

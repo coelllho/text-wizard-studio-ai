@@ -10,7 +10,8 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { useAuth } from '@/hooks/useAuth';
-import { User, LogOut } from 'lucide-react';
+import { User, LogOut, Settings } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const UserMenu = () => {
   const { user, signOut } = useAuth();
@@ -42,6 +43,13 @@ const UserMenu = () => {
             <p className="text-sm font-medium">Email</p>
             <p className="text-sm text-muted-foreground">{user.email}</p>
           </div>
+          
+          <Link to="/settings" onClick={() => setOpen(false)}>
+            <Button variant="outline" className="w-full justify-start">
+              <Settings className="mr-2 h-4 w-4" />
+              Configurações
+            </Button>
+          </Link>
           
           <Button 
             onClick={handleSignOut} 
