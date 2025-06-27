@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { FileText, Instagram, Mic, Users, Lightbulb, Radio, User, Hash, MessageSquare, UserCheck, Mail, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import UserMenu from "@/components/UserMenu";
 
 const Index = () => {
   const tools = [
@@ -124,7 +125,10 @@ const Index = () => {
                 </h1>
               </div>
             </div>
-            <ThemeToggle />
+            <div className="flex items-center space-x-2">
+              <UserMenu />
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </header>

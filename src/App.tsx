@@ -4,7 +4,10 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/hooks/useAuth";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
+import Auth from "./pages/Auth";
 import PodcastGenerator from "./pages/PodcastGenerator";
 import InstagramGenerator from "./pages/InstagramGenerator";
 import BlogGenerator from "./pages/BlogGenerator";
@@ -23,29 +26,83 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/podcast-generator" element={<PodcastGenerator />} />
-          <Route path="/instagram-generator" element={<InstagramGenerator />} />
-          <Route path="/blog-generator" element={<BlogGenerator />} />
-          <Route path="/social-post-generator" element={<SocialPostGenerator />} />
-          <Route path="/bullet-points-generator" element={<BulletPointsGenerator />} />
-          <Route path="/discussion-post-generator" element={<DiscussionPostGenerator />} />
-          <Route path="/resignation-letter-generator" element={<ResignationLetterGenerator />} />
-          <Route path="/content-ideas-generator" element={<ContentIdeasGenerator />} />
-          <Route path="/radio-ad-generator" element={<RadioAdGenerator />} />
-          <Route path="/resume-objective-generator" element={<ResumeObjectiveGenerator />} />
-          <Route path="/resume-headline-generator" element={<ResumeHeadlineGenerator />} />
-          <Route path="/twitter-hashtag-generator" element={<TwitterHashtagGenerator />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <AuthProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/" element={
+              <ProtectedRoute>
+                <Index />
+              </ProtectedRoute>
+            } />
+            <Route path="/podcast-generator" element={
+              <ProtectedRoute>
+                <PodcastGenerator />
+              </ProtectedRoute>
+            } />
+            <Route path="/instagram-generator" element={
+              <ProtectedRoute>
+                <InstagramGenerator />
+              </ProtectedRoute>
+            } />
+            <Route path="/blog-generator" element={
+              <ProtectedRoute>
+                <BlogGenerator />
+              </ProtectedRoute>
+            } />
+            <Route path="/social-post-generator" element={
+              <ProtectedRoute>
+                <SocialPostGenerator />
+              </ProtectedRoute>
+            } />
+            <Route path="/bullet-points-generator" element={
+              <ProtectedRoute>
+                <BulletPointsGenerator />
+              </ProtectedRoute>
+            } />
+            <Route path="/discussion-post-generator" element={
+              <ProtectedRoute>
+                <DiscussionPostGenerator />
+              </ProtectedRoute>
+            } />
+            <Route path="/resignation-letter-generator" element={
+              <ProtectedRoute>
+                <ResignationLetterGenerator />
+              </ProtectedRoute>
+            } />
+            <Route path="/content-ideas-generator" element={
+              <ProtectedRoute>
+                <ContentIdeasGenerator />
+              </ProtectedRoute>
+            } />
+            <Route path="/radio-ad-generator" element={
+              <ProtectedRoute>
+                <RadioAdGenerator />
+              </ProtectedRoute>
+            } />
+            <Route path="/resume-objective-generator" element={
+              <ProtectedRoute>
+                <ResumeObjectiveGenerator />
+              </ProtectedRoute>
+            } />
+            <Route path="/resume-headline-generator" element={
+              <ProtectedRoute>
+                <ResumeHeadlineGenerator />
+              </ProtectedRoute>
+            } />
+            <Route path="/twitter-hashtag-generator" element={
+              <ProtectedRoute>
+                <TwitterHashtagGenerator />
+              </ProtectedRoute>
+            } />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 
